@@ -13,7 +13,7 @@ const app = express();
 // middleware to handle cors
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: "https://expense-tracker-kappa-sable.vercel.app",
     })
 );
 
