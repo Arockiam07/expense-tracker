@@ -6,8 +6,8 @@ import {
 } from "../utils/toast";
 import { loaderControl } from "../utils/loaderControl"; // 👈 loader utility
 
-// const BASE_URL = "http://localhost:8000/api/v1";
-const BASE_URL = "https://expensetracker-pfml.onrender.com/api/v1";
+const BASE_URL = "http://localhost:8000/api/v1";
+// const BASE_URL = "https://expensetracker-pfml.onrender.com/api/v1";
 
 // Axios instance
 const API = axios.create({

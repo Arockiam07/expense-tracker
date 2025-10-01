@@ -68,9 +68,9 @@ const AddTransaction = ({ userId, onSuccess }) => {
         ✕
       </button>
 
-      <h2 className="text-3xl font-bold text-center text-slate-800 dark:text-white mb-8 tracking-tight">
-        💳 Add Transaction
-      </h2>
+      <h3 className="text-2xl sm:text-3xl font-bold text-center text-slate-800 dark:text-white mb-6 sm:mb-8 tracking-tight">
+  💳 Add Transaction
+</h3>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Row: Title & Amount */}
@@ -150,7 +150,7 @@ const AddTransaction = ({ userId, onSuccess }) => {
         </div>
 
         {/* Tags */}
-        <div>
+        {/* <div>
           <label className="block mb-1 text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2">
             Tags
           </label>
@@ -170,7 +170,7 @@ const AddTransaction = ({ userId, onSuccess }) => {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Error message */}
         {error && <p className="text-red-500 text-sm">{error}</p>}
