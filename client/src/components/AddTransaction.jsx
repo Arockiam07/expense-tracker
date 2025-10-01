@@ -93,7 +93,7 @@ const AddTransaction = ({ userId, onSuccess }) => {
               Amount
             </label>
             <input
-              type="number"
+              type="text"
               placeholder="e.g. -500 for expense"
               className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-800 dark:text-white"
               value={amount}
