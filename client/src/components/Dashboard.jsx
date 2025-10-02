@@ -24,9 +24,15 @@ const Dashboard = () => {
     const [transactions, setTransactions] = useState([]);
     const [budgetGoals, setBudgetGoals] = useState([]);
     const [debts, setDebts] = useState([]);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
     
     const totalBalance = totalIncome - totalExpense;
     const budgetUsed = totalIncome > 0 ? (totalExpense / totalIncome) * 100 : 0;
+
+    // Function to refresh all data
+    const refreshData = () => {
+        setRefreshTrigger(prev => prev + 1);
+    };
 
     // Decode token and set userId
     const token = localStorage.getItem("token");
@@ -37,7 +43,7 @@ const Dashboard = () => {
         }
     }, [token]);
 
-    // Fetch all required data
+    // Fetch all required data - now depends on refreshTrigger
     useEffect(() => {
         if (!userId || !token) return;
 
@@ -51,8 +57,8 @@ const Dashboard = () => {
                 ]);
 
                 // Set summary data
-                setTotalIncome(summary.totalIncome);
-                setTotalExpense(summary.totalExpenses);
+                setTotalIncome(summary.totalIncome || 0);
+                setTotalExpense(summary.totalExpenses || 0);
 
                 // Set transactions
                 setTransactions(txs.transactions || []);
@@ -68,21 +74,21 @@ const Dashboard = () => {
         };
 
         fetchData();
-    }, [userId, token]);
+    }, [userId, token, refreshTrigger]); // Added refreshTrigger as dependency
 
     // Calculate total spent per category
     const calculateSpentPerCategory = (transactions) => {
-    if (!Array.isArray(transactions)) return {}; // safety check
-    const spentPerCategory = {};
-    transactions.forEach(tx => {
-        if (spentPerCategory[tx.category]) {
-            spentPerCategory[tx.category] += tx.amount;
-        } else {
-            spentPerCategory[tx.category] = tx.amount;
-        }
-    });
-    return spentPerCategory;
-};
+        if (!Array.isArray(transactions)) return {}; // safety check
+        const spentPerCategory = {};
+        transactions.forEach(tx => {
+            if (spentPerCategory[tx.category]) {
+                spentPerCategory[tx.category] += tx.amount;
+            } else {
+                spentPerCategory[tx.category] = tx.amount;
+            }
+        });
+        return spentPerCategory;
+    };
 
     // Merge budget goals with spent data
     const budgetGoalsWithSpent = budgetGoals.map(goal => {
@@ -93,15 +99,29 @@ const Dashboard = () => {
         };
     });
 
+    // Handle successful transaction addition
+    const handleTransactionSuccess = () => {
+        setShowModal(false);
+        refreshData(); // Refresh all data after successful transaction
+    };
+
     return (
         <Layout>
             <div className={`p-8 transition-all duration-500 ease-in-out relative ${showModal ? "blur-sm pointer-events-none" : ""} 
                 bg-gradient-to-b from-slate-50 to-white dark:from-[#0c0f1c] dark:to-[#1a1d2e]
                 text-slate-800 dark:text-white rounded-3xl shadow-xl sm:px-10`}>
                 
-                <h2 className="text-4xl font-extrabold mb-12 text-center md:text-left tracking-tight">
-                    Your Financial Overview
-                </h2>
+                <div className="flex justify-between items-center mb-12">
+                    <h2 className="text-4xl font-extrabold tracking-tight">
+                        Your Financial Overview
+                    </h2>
+                    <button 
+                        onClick={refreshData}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                    >
+                        Refresh
+                    </button>
+                </div>
 
                 {/* Top Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -181,7 +201,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Debt Overview */}
-                <DebtOverview debts={debts} />
+                <DebtOverview debts={debts} refreshData={refreshData} />
             </div>
 
             {/* Floating Add Button */}
@@ -193,7 +213,7 @@ const Dashboard = () => {
             {showModal && userId && (
                 <div className="fixed inset-0 z-40 bg-white/30 dark:bg-slate-800/30 backdrop-blur-md flex items-center justify-center p-6" onClick={() => setShowModal(false)}>
                     <div className="w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
-                        <AddTransaction userId={userId} onSuccess={() => setShowModal(false)} />
+                        <AddTransaction userId={userId} onSuccess={handleTransactionSuccess} />
                     </div>
                 </div>
             )}
