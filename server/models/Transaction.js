@@ -27,8 +27,8 @@ const TransactionSchema = new mongoose.Schema(
         "Entertainment", 
         "Travel", 
         "Shopping", 
-        "Savings", 
-        "Others", 
+        "Income", 
+        "Income", 
         "Utilities"
       ], 
       default: "Others", 
