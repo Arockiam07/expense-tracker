@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -9,6 +10,13 @@ const PORT = process.env.PORT || 8000;
 // Middlewares
 app.use(cors());
 app.use(express.json());
+
+
+setInterval(() => {
+  axios.get('https://expensetracker-pfml.onrender.com/api/v1')
+    .then(() => console.log('Self-ping successful'))
+    .catch((err) => console.error('Self-ping failed', err));
+}, 14 * 60 * 1000); // 14 mins interval
 
 // Test Route
 app.get("/", (req, res) => {

@@ -1,9 +1,9 @@
 import { useLoader } from "../context/LoaderContext";
 
-export default function Loader() {
+export default function Loader({ forceShow = false }) {
   const { loading } = useLoader();
 
-  if (!loading) return null;
+  if (!loading && !forceShow) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -19,7 +19,7 @@ export default function Loader() {
         backdrop-blur-xl 
         border border-white/30 dark:border-gray-700/40 
         transition-colors">
-        
+
         {/* Premium Dual Gradient Spinner */}
         <div className="relative w-16 h-16">
           <div className="absolute w-full h-full rounded-full border-4 border-t-transparent 
